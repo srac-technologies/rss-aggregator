@@ -3,9 +3,10 @@ import { getTags } from '@/app/actions/tags'
 import Link from 'next/link'
 import TagManager from './TagManager'
 
-export default async function SubscriptionDetailPage({ params }: { params: { id: string } }) {
+export default async function SubscriptionDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const [subscription, allTags] = await Promise.all([
-    getSubscription(params.id),
+    getSubscription(id),
     getTags()
   ])
 

@@ -19,9 +19,9 @@ interface NewsItem {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { subscriptionId: string } }
+  { params }: { params: Promise<{ subscriptionId: string }> }
 ) {
-  const subscriptionId = params.subscriptionId
+  const { subscriptionId } = await params
   
   const cacheKey = `rss_${subscriptionId}`
   const cachedData = cache.get(cacheKey)
