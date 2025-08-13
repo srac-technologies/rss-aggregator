@@ -14,7 +14,6 @@ export default function TagList({ tags }: { tags: Tag[] }) {
   const [editValue, setEditValue] = useState('')
 
   const doDeleteTag = async (id: number) => {
-    'use server'
     await deleteTag(id)
   }
 

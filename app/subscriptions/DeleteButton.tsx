@@ -1,8 +1,11 @@
 'use client'
 
-import { deleteSubscription } from '@/app/actions/subscriptions'
+type Props = {
+  id: string,
+  deleteSubscription: (id: string) => Promise<void>
+}
 
-export default function DeleteSubscriptionButton({ id }: { id: string }) {
+export default function DeleteSubscriptionButton({ id, deleteSubscription }: Props) {
   return (
     <form action={() => deleteSubscription(id)}>
       <button type="submit" className="button danger">

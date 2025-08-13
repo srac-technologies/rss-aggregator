@@ -62,6 +62,7 @@ export async function getSubscription(id: string) {
 }
 
 export async function createSubscription() {
+  'use server'
   const { data, error } = await supabaseAdmin
     .from('subscriptions')
     .insert({})
@@ -74,6 +75,7 @@ export async function createSubscription() {
 }
 
 export async function deleteSubscription(id: string) {
+  'use server'
   // First delete associated subscription_tags
   await supabaseAdmin
     .from('subscriptions_tags')
