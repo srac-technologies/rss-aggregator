@@ -91,6 +91,7 @@ export async function deleteSubscription(id: string) {
 }
 
 export async function addTagToSubscription(subscriptionId: string, tagId: number) {
+  'use server'
   const { data, error } = await supabaseAdmin
     .from('subscriptions_tags')
     .insert({
@@ -106,6 +107,7 @@ export async function addTagToSubscription(subscriptionId: string, tagId: number
 }
 
 export async function removeTagFromSubscription(subscriptionId: string, tagId: number) {
+  'use server'
   const { error } = await supabaseAdmin
     .from('subscriptions_tags')
     .delete()

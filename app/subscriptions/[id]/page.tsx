@@ -2,6 +2,7 @@ import { getSubscription, addTagToSubscription, removeTagFromSubscription } from
 import { getTags } from '@/app/actions/tags'
 import Link from 'next/link'
 import TagManager from './TagManager'
+import { RemoveTag } from './RemoveTag'
 
 export default async function SubscriptionDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -12,6 +13,11 @@ export default async function SubscriptionDetailPage({ params }: { params: Promi
 
   const subscribedTagIds = subscription.subscriptions_tags?.map((st: any) => st.tag_id) || []
   const availableTags = allTags.filter(tag => !subscribedTagIds.includes(tag.id))
+
+  const doRemoveTagFromSubscription = async (subscriptionId: string, tagId: number) => {
+    'use server'
+    await removeTagFromSubscription(subscriptionId, tagId)
+  }
 
   return (
     <div>
@@ -26,13 +32,13 @@ export default async function SubscriptionDetailPage({ params }: { params: Promi
         <h2>Subscription Details</h2>
         <p><strong>ID:</strong> {subscription.id}</p>
         <p><strong>Created:</strong> {new Date(subscription.created_at).toLocaleString()}</p>
-        
+
         <div style={{ marginTop: '1rem' }}>
           <strong>RSS Feed URL:</strong>
-          <div style={{ 
-            background: '#f8f9fa', 
-            padding: '1rem', 
-            borderRadius: '6px', 
+          <div style={{
+            background: '#f8f9fa',
+            padding: '1rem',
+            borderRadius: '6px',
             marginTop: '0.5rem',
             wordBreak: 'break-all'
           }}>
@@ -46,12 +52,12 @@ export default async function SubscriptionDetailPage({ params }: { params: Promi
         {subscription.subscriptions_tags?.length > 0 ? (
           <div className="tags">
             {subscription.subscriptions_tags.map((st: any) => (
-              <div key={st.tag_id} className="tag">
-                {st.tags.tag}
-                <form action={() => removeTagFromSubscription(subscription.id, st.tag_id)} style={{ display: 'inline' }}>
-                  <button type="submit" title="Remove tag">×</button>
-                </form>
-              </div>
+              <RemoveTag
+                key={st.tag_id}
+                subscriptionTag={st}
+                subscriptionId={subscription.id}
+                removeTagFromSubscription={doRemoveTagFromSubscription}
+              />
             ))}
           </div>
         ) : (
@@ -62,7 +68,7 @@ export default async function SubscriptionDetailPage({ params }: { params: Promi
       <div className="card">
         <h2>Add Tags</h2>
         {availableTags.length > 0 ? (
-          <TagManager subscriptionId={subscription.id} availableTags={availableTags} />
+          <TagManager  subscriptionId={subscription.id} availableTags={availableTags} doHandleAddTag={addTagToSubscription} />
         ) : (
           <p style={{ color: '#6c757d' }}>
             All available tags are already assigned or no tags exist.

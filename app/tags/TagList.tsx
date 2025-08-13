@@ -13,6 +13,11 @@ export default function TagList({ tags }: { tags: Tag[] }) {
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editValue, setEditValue] = useState('')
 
+  const doDeleteTag = async (id: number) => {
+    'use server'
+    await deleteTag(id)
+  }
+
   function startEdit(tag: Tag) {
     setEditingId(tag.id)
     setEditValue(tag.tag)
@@ -34,11 +39,11 @@ export default function TagList({ tags }: { tags: Tag[] }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
       {tags.map(tag => (
-        <div 
-          key={tag.id} 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+        <div
+          key={tag.id}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
             gap: '1rem',
             padding: '0.75rem',
             background: '#f8f9fa',
@@ -51,7 +56,7 @@ export default function TagList({ tags }: { tags: Tag[] }) {
                 type="text"
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
-                style={{ 
+                style={{
                   flex: 1,
                   padding: '0.25rem 0.5rem',
                   border: '1px solid #0070f3',
@@ -59,14 +64,14 @@ export default function TagList({ tags }: { tags: Tag[] }) {
                 }}
                 autoFocus
               />
-              <button 
+              <button
                 onClick={handleUpdate}
                 className="button"
                 style={{ padding: '0.25rem 0.75rem', fontSize: '13px' }}
               >
                 Save
               </button>
-              <button 
+              <button
                 onClick={cancelEdit}
                 className="button secondary"
                 style={{ padding: '0.25rem 0.75rem', fontSize: '13px' }}
@@ -80,15 +85,15 @@ export default function TagList({ tags }: { tags: Tag[] }) {
               <span style={{ color: '#6c757d', fontSize: '12px' }}>
                 ID: {tag.id}
               </span>
-              <button 
+              <button
                 onClick={() => startEdit(tag)}
                 className="button"
                 style={{ padding: '0.25rem 0.75rem', fontSize: '13px' }}
               >
                 Edit
               </button>
-              <form action={() => deleteTag(tag.id)} style={{ margin: 0 }}>
-                <button 
+              <form action={() => doDeleteTag(tag.id)} style={{ margin: 0 }}>
+                <button
                   type="submit"
                   className="button danger"
                   style={{ padding: '0.25rem 0.75rem', fontSize: '13px' }}

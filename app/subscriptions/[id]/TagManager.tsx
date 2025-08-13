@@ -1,32 +1,33 @@
 'use client'
 
-import { addTagToSubscription } from '@/app/actions/subscriptions'
 import { useState } from 'react'
 
-export default function TagManager({ 
-  subscriptionId, 
-  availableTags 
-}: { 
+export default function TagManager({
+  subscriptionId,
+  availableTags,
+  doHandleAddTag
+}: {
   subscriptionId: string
   availableTags: Array<{ id: number; tag: string }>
+  doHandleAddTag?: (subscriptionId: string, selectedTagId: number) => Promise<void>
 }) {
   const [selectedTagId, setSelectedTagId] = useState<string>('')
 
   async function handleAddTag() {
     if (selectedTagId) {
-      await addTagToSubscription(subscriptionId, parseInt(selectedTagId))
+      await doHandleAddTag?.(subscriptionId, parseInt(selectedTagId))
       setSelectedTagId('')
     }
   }
 
   return (
-    <form action={handleAddTag}>
+    <form action={() => handleAddTag()}>
       <div style={{ display: 'flex', gap: '0.5rem' }}>
-        <select 
-          value={selectedTagId} 
+        <select
+          value={selectedTagId}
           onChange={(e) => setSelectedTagId(e.target.value)}
           required
-          style={{ 
+          style={{
             flex: 1,
             padding: '0.5rem',
             border: '1px solid #ddd',

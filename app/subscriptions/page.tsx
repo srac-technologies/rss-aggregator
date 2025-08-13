@@ -9,7 +9,7 @@ export default async function SubscriptionsPage() {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h1>Subscriptions</h1>
-        <form action={createSubscription}>
+        <form action={() => createSubscription()}>
           <button type="submit" className="button">
             Create New Subscription
           </button>
@@ -28,7 +28,7 @@ export default async function SubscriptionsPage() {
               <p style={{ fontSize: '12px', color: '#6c757d', marginBottom: '1rem' }}>
                 ID: {subscription.id}
               </p>
-              
+
               <div>
                 <strong>Tags:</strong>
                 {subscription.subscriptions_tags?.length > 0 ? (
