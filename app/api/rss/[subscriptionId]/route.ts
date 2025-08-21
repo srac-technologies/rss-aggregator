@@ -22,10 +22,10 @@ export async function GET(
   { params }: { params: Promise<{ subscriptionId: string }> }
 ) {
   const { subscriptionId } = await params
-  
+
   const cacheKey = `rss_${subscriptionId}`
   const cachedData = cache.get(cacheKey)
-  
+
   if (cachedData && Date.now() - cachedData.timestamp < CACHE_DURATION) {
     return new NextResponse(cachedData.data, {
       status: 200,
@@ -36,7 +36,7 @@ export async function GET(
       }
     })
   }
-  
+
   try {
     // Query the rss_feed view directly with subscription_id
     const { data: feedData, error } = await supabase
@@ -45,7 +45,7 @@ export async function GET(
       .eq('subscription_id', subscriptionId)
       .order('created_at', { ascending: false })
       .limit(50)
-    
+
     if (error) {
       console.error('Supabase query error:', error)
       return NextResponse.json(
@@ -53,14 +53,14 @@ export async function GET(
         { status: 500 }
       )
     }
-    
+
     if (!feedData || feedData.length === 0) {
       return NextResponse.json(
         { error: 'No feed data found for this subscription' },
         { status: 404 }
       )
     }
-    
+
     // Create RSS feed with metadata
     const feed = new RSS({
       title: `RSS Feed - Subscription ${subscriptionId}`,
@@ -73,7 +73,7 @@ export async function GET(
       pubDate: new Date().toUTCString(),
       ttl: 60 // TTL in minutes (1 hour)
     })
-    
+
     // Add each news item to the RSS feed
     feedData.forEach((item: NewsItem) => {
       if (item.title || item.content) { // Only add items with content
@@ -82,21 +82,21 @@ export async function GET(
           description: item.content || item.title || '',
           url: item.url || item.parent || '#',
           guid: item.guid,
-          date: new Date(item.tagged_at || item.created_at),
+          date: new Date(item.created_at),
           custom_elements: item.parent ? [
             { 'source:parent': item.parent }
           ] : []
         })
       }
     })
-    
+
     const xml = feed.xml({ indent: true })
-    
+
     cache.set(cacheKey, {
       data: xml,
       timestamp: Date.now()
     })
-    
+
     return new NextResponse(xml, {
       status: 200,
       headers: {
@@ -105,7 +105,7 @@ export async function GET(
         'X-Cache': 'MISS'
       }
     })
-    
+
   } catch (error) {
     console.error('Error generating RSS feed:', error)
     return NextResponse.json(
