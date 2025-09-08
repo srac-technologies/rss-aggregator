@@ -1,14 +1,17 @@
 import { getSubscription, addTagToSubscription, removeTagFromSubscription } from '@/app/actions/subscriptions'
 import { getTags } from '@/app/actions/tags'
+import { getNewsBySubscription } from '@/app/actions/news'
 import Link from 'next/link'
 import TagManager from './TagManager'
 import { RemoveTag } from './RemoveTag'
+import NewsCard from '@/components/NewsCard'
 
 export default async function SubscriptionDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const [subscription, allTags] = await Promise.all([
+  const [subscription, allTags, newsItems] = await Promise.all([
     getSubscription(id),
-    getTags()
+    getTags(),
+    getNewsBySubscription(id, 10)
   ])
 
   const subscribedTagIds = subscription.subscriptions_tags?.map((st: any) => st.tag_id) || []
@@ -45,6 +48,21 @@ export default async function SubscriptionDetailPage({ params }: { params: Promi
             <code>{`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/rss/${subscription.id}`}</code>
           </div>
         </div>
+      </div>
+
+      <div style={{ marginBottom: '2rem' }}>
+        <h2 style={{ marginBottom: '1.5rem' }}>Recent News Preview</h2>
+        {newsItems.length > 0 ? (
+          <div className="grid">
+            {newsItems.map((news) => (
+              <NewsCard key={news.id} news={news} />
+            ))}
+          </div>
+        ) : (
+          <div className="card">
+            <p style={{ color: '#6c757d' }}>No news items found for this subscription.</p>
+          </div>
+        )}
       </div>
 
       <div className="card">
