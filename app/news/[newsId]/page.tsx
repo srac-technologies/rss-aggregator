@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
 
-export default async function NewsDetailPage({ params }: { params: Promise<{ newsId: string }> }) {
+export default async function NewsDetailPage({ params }: { params: Promise<{ newsId: number }> }) {
   const { newsId } = await params
   const news = await getNewsById(newsId)
 
@@ -28,9 +28,9 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ new
           <button className="button secondary">← Back</button>
         </Link>
         {news.url && (
-          <a 
-            href={news.url} 
-            target="_blank" 
+          <a
+            href={news.url}
+            target="_blank"
             rel="noopener noreferrer"
             className="button"
           >
@@ -44,8 +44,8 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ new
           <h1 style={{ fontSize: '2rem', lineHeight: '1.3', marginBottom: '1rem' }}>
             {news.title || 'Untitled'}
           </h1>
-          <div style={{ 
-            color: '#6c757d', 
+          <div style={{
+            color: '#6c757d',
             fontSize: '0.875rem',
             paddingBottom: '1rem',
             borderBottom: '1px solid #e9ecef'
@@ -54,8 +54,8 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ new
           </div>
         </header>
 
-        <div style={{ 
-          fontSize: '1.125rem', 
+        <div style={{
+          fontSize: '1.125rem',
           lineHeight: '1.8',
           color: '#333'
         }}>
@@ -70,8 +70,8 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ new
                 ol: ({ children }) => <ol style={{ marginBottom: '1rem', paddingLeft: '2rem' }}>{children}</ol>,
                 li: ({ children }) => <li style={{ marginBottom: '0.5rem' }}>{children}</li>,
                 blockquote: ({ children }) => (
-                  <blockquote style={{ 
-                    borderLeft: '4px solid #e9ecef', 
+                  <blockquote style={{
+                    borderLeft: '4px solid #e9ecef',
                     paddingLeft: '1rem',
                     marginLeft: '0',
                     marginBottom: '1rem',
@@ -84,7 +84,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ new
                 code: ({ children, className }) => {
                   const isInline = !className
                   return isInline ? (
-                    <code style={{ 
+                    <code style={{
                       backgroundColor: '#f8f9fa',
                       padding: '0.125rem 0.25rem',
                       borderRadius: '3px',
@@ -120,11 +120,11 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ new
                   </pre>
                 ),
                 a: ({ children, href }) => (
-                  <a 
-                    href={href} 
-                    target="_blank" 
+                  <a
+                    href={href}
+                    target="_blank"
                     rel="noopener noreferrer"
-                    style={{ 
+                    style={{
                       color: '#0070f3',
                       textDecoration: 'none'
                     }}

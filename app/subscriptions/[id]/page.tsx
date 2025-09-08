@@ -86,7 +86,7 @@ export default async function SubscriptionDetailPage({ params }: { params: Promi
       <div className="card">
         <h2>Add Tags</h2>
         {availableTags.length > 0 ? (
-          <TagManager  subscriptionId={subscription.id} availableTags={availableTags} doHandleAddTag={addTagToSubscription} />
+          <TagManager subscriptionId={subscription.id} availableTags={availableTags} doHandleAddTag={addTagToSubscription} />
         ) : (
           <p style={{ color: '#6c757d' }}>
             All available tags are already assigned or no tags exist.

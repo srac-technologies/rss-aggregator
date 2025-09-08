@@ -30,7 +30,7 @@ export async function getNewsBySubscription(subscriptionId: string, limit: numbe
   return data || []
 }
 
-export async function getNewsById(newsId: string): Promise<NewsItem | null> {
+export async function getNewsById(newsId: number): Promise<NewsItem | null> {
   const { data, error } = await supabase
     .from('news')
     .select('*')
@@ -38,7 +38,7 @@ export async function getNewsById(newsId: string): Promise<NewsItem | null> {
     .single()
 
   if (error) {
-    console.error('Error fetching news by id:', error)
+    console.error('Error fetching news by id:', newsId, error)
     return null
   }
 
