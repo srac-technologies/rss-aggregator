@@ -38,9 +38,24 @@ export async function getNewsById(newsId: number): Promise<NewsItem | null> {
     .single()
 
   if (error) {
-    console.error('Error fetching news by id:', newsId, error)
+    console.error('Error fetching news by id:', error)
     return null
   }
 
   return data
+}
+
+export async function getAllNews(limit: number = 1000, offset: number = 0): Promise<NewsItem[]> {
+  const { data, error } = await supabase
+    .from('news')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1)
+
+  if (error) {
+    console.error('Error fetching all news:', error)
+    return []
+  }
+
+  return data || []
 }
