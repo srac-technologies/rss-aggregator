@@ -84,6 +84,11 @@ nav a:hover {
   background: #5a6268;
 }
 
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .form-group {
   margin-bottom: 1rem;
 }
