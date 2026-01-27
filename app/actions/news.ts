@@ -1,6 +1,6 @@
 'use server'
 
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-server'
 
 export interface NewsItem {
   id: bigint
@@ -15,7 +15,7 @@ export interface NewsItem {
 }
 
 export async function getNewsBySubscription(subscriptionId: string, limit: number = 10): Promise<NewsItem[]> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('rss_feed')
     .select('*')
     .eq('subscription_id', subscriptionId)
@@ -31,7 +31,7 @@ export async function getNewsBySubscription(subscriptionId: string, limit: numbe
 }
 
 export async function getNewsById(newsId: number): Promise<NewsItem | null> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('news')
     .select('*')
     .eq('id', newsId)
@@ -46,7 +46,7 @@ export async function getNewsById(newsId: number): Promise<NewsItem | null> {
 }
 
 export async function getAllNews(limit: number = 1000, offset: number = 0): Promise<NewsItem[]> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('news')
     .select('*')
     .order('created_at', { ascending: false })
