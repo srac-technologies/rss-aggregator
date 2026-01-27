@@ -36,34 +36,170 @@ export type Database = {
     Tables: {
       news: {
         Row: {
+          auto_tagged: boolean | null
+          collected_at: string | null
           content: string | null
           created_at: string
           guid: string
           id: number
           parent: string | null
+          source_id: number | null
           tagged_at: string | null
           title: string | null
           url: string | null
         }
         Insert: {
+          auto_tagged?: boolean | null
+          collected_at?: string | null
           content?: string | null
           created_at?: string
           guid: string
           id?: number
           parent?: string | null
+          source_id?: number | null
           tagged_at?: string | null
           title?: string | null
           url?: string | null
         }
         Update: {
+          auto_tagged?: boolean | null
+          collected_at?: string | null
           content?: string | null
           created_at?: string
           guid?: string
           id?: number
           parent?: string | null
+          source_id?: number | null
           tagged_at?: string | null
           title?: string | null
           url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "news_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "news_collection_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      news_collection_runs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          duration_ms: number | null
+          error_message: string | null
+          error_stack: string | null
+          id: number
+          items_fetched: number | null
+          items_new: number | null
+          items_skipped: number | null
+          llm_tokens_used: number | null
+          source_id: number
+          started_at: string
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          error_stack?: string | null
+          id?: number
+          items_fetched?: number | null
+          items_new?: number | null
+          items_skipped?: number | null
+          llm_tokens_used?: number | null
+          source_id: number
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          error_stack?: string | null
+          id?: number
+          items_fetched?: number | null
+          items_new?: number | null
+          items_skipped?: number | null
+          llm_tokens_used?: number | null
+          source_id?: number
+          started_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "news_collection_runs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "news_collection_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      news_collection_sources: {
+        Row: {
+          auto_tag_enabled: boolean | null
+          collection_frequency: string | null
+          created_at: string
+          id: number
+          is_active: boolean | null
+          last_collected_at: string | null
+          last_error: string | null
+          llm_model: string | null
+          llm_provider: string | null
+          name: string
+          next_collection_at: string | null
+          rss_url: string | null
+          tavily_days: number | null
+          tavily_query: string | null
+          tavily_search_depth: string | null
+          total_items_collected: number | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          auto_tag_enabled?: boolean | null
+          collection_frequency?: string | null
+          created_at?: string
+          id?: number
+          is_active?: boolean | null
+          last_collected_at?: string | null
+          last_error?: string | null
+          llm_model?: string | null
+          llm_provider?: string | null
+          name: string
+          next_collection_at?: string | null
+          rss_url?: string | null
+          tavily_days?: number | null
+          tavily_query?: string | null
+          tavily_search_depth?: string | null
+          total_items_collected?: number | null
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          auto_tag_enabled?: boolean | null
+          collection_frequency?: string | null
+          created_at?: string
+          id?: number
+          is_active?: boolean | null
+          last_collected_at?: string | null
+          last_error?: string | null
+          llm_model?: string | null
+          llm_provider?: string | null
+          name?: string
+          next_collection_at?: string | null
+          rss_url?: string | null
+          tavily_days?: number | null
+          tavily_query?: string | null
+          tavily_search_depth?: string | null
+          total_items_collected?: number | null
+          type?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -110,18 +246,181 @@ export type Database = {
           },
         ]
       }
-      subscriptions: {
+      newsletter_sends: {
         Row: {
           created_at: string
-          id: string
+          email_provider_id: string | null
+          error_message: string | null
+          html_content: string
+          id: number
+          llm_tokens_used: number | null
+          news_count: number
+          news_ids: number[]
+          newsletter_settings_id: number
+          processing_duration_ms: number | null
+          recipient_email: string
+          sent_at: string
+          status: string
+          subject: string
+          subscription_id: string
+          summary_content: string | null
+          view_count: number | null
+          viewed_at: string | null
         }
         Insert: {
           created_at?: string
-          id?: string
+          email_provider_id?: string | null
+          error_message?: string | null
+          html_content: string
+          id?: number
+          llm_tokens_used?: number | null
+          news_count?: number
+          news_ids?: number[]
+          newsletter_settings_id: number
+          processing_duration_ms?: number | null
+          recipient_email: string
+          sent_at?: string
+          status?: string
+          subject: string
+          subscription_id: string
+          summary_content?: string | null
+          view_count?: number | null
+          viewed_at?: string | null
         }
         Update: {
           created_at?: string
+          email_provider_id?: string | null
+          error_message?: string | null
+          html_content?: string
+          id?: number
+          llm_tokens_used?: number | null
+          news_count?: number
+          news_ids?: number[]
+          newsletter_settings_id?: number
+          processing_duration_ms?: number | null
+          recipient_email?: string
+          sent_at?: string
+          status?: string
+          subject?: string
+          subscription_id?: string
+          summary_content?: string | null
+          view_count?: number | null
+          viewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "newsletter_sends_newsletter_settings_id_fkey"
+            columns: ["newsletter_settings_id"]
+            isOneToOne: false
+            referencedRelation: "newsletter_settings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "newsletter_sends_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "rss_feed"
+            referencedColumns: ["subscription_id"]
+          },
+          {
+            foreignKeyName: "newsletter_sends_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      newsletter_settings: {
+        Row: {
+          created_at: string
+          filter_prompt: string
+          frequency: string
+          id: number
+          is_active: boolean | null
+          llm_model: string | null
+          llm_provider: string | null
+          recipient_email: string
+          send_day_of_week: number | null
+          send_time: string | null
+          sender_name: string | null
+          subject_template: string | null
+          subscription_id: string
+          summary_prompt: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          filter_prompt: string
+          frequency?: string
+          id?: number
+          is_active?: boolean | null
+          llm_model?: string | null
+          llm_provider?: string | null
+          recipient_email: string
+          send_day_of_week?: number | null
+          send_time?: string | null
+          sender_name?: string | null
+          subject_template?: string | null
+          subscription_id: string
+          summary_prompt: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          filter_prompt?: string
+          frequency?: string
+          id?: number
+          is_active?: boolean | null
+          llm_model?: string | null
+          llm_provider?: string | null
+          recipient_email?: string
+          send_day_of_week?: number | null
+          send_time?: string | null
+          sender_name?: string | null
+          subject_template?: string | null
+          subscription_id?: string
+          summary_prompt?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "newsletter_settings_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: true
+            referencedRelation: "rss_feed"
+            referencedColumns: ["subscription_id"]
+          },
+          {
+            foreignKeyName: "newsletter_settings_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: true
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          description: string | null
+          has_newsletter: boolean | null
+          id: string
+          name: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          has_newsletter?: boolean | null
           id?: string
+          name?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          has_newsletter?: boolean | null
+          id?: string
+          name?: string | null
         }
         Relationships: []
       }
@@ -204,7 +503,10 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      calculate_next_collection_time: {
+        Args: { frequency: string; from_time?: string }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
