@@ -7,7 +7,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:status": "supabase status",
+    "db:migrate": "supabase db reset",
+    "generate:types": "supabase gen types typescript --local > lib/database.types.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,5 +28,8 @@
     "react-dom": "^19.1.1",
     "rss": "^1.2.2",
     "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "supabase": "^2.72.8"
   }
 }
