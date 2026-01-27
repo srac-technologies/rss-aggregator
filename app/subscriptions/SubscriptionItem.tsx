@@ -5,6 +5,8 @@ import Link from 'next/link'
 type SubscriptionItemProps = {
   subscription: {
     id: string
+    name: string | null
+    description: string | null
     subscriptions_tags?: Array<{
       tag_id: string
       tags: {
@@ -18,7 +20,12 @@ type SubscriptionItemProps = {
 export default function SubscriptionItem({ subscription, deleteSubscription }: SubscriptionItemProps) {
   return (
     <div className="card">
-      <h3>Subscription</h3>
+      <h3>{subscription.name || 'Unnamed Subscription'}</h3>
+      {subscription.description && (
+        <p style={{ fontSize: '14px', color: '#6c757d', marginBottom: '0.5rem' }}>
+          {subscription.description}
+        </p>
+      )}
       <p style={{ fontSize: '12px', color: '#6c757d', marginBottom: '1rem' }}>
         ID: {subscription.id}
       </p>

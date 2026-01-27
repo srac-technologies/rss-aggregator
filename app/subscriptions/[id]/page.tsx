@@ -1,10 +1,11 @@
-import { getSubscription, addTagToSubscription, removeTagFromSubscription } from '@/app/actions/subscriptions'
+import { getSubscription, addTagToSubscription, removeTagFromSubscription, updateSubscription } from '@/app/actions/subscriptions'
 import { getTags } from '@/app/actions/tags'
 import { getNewsBySubscription } from '@/app/actions/news'
 import Link from 'next/link'
 import TagManager from './TagManager'
 import { RemoveTag } from './RemoveTag'
 import NewsCard from '@/components/NewsCard'
+import SubscriptionForm from './SubscriptionForm'
 
 export default async function SubscriptionDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -25,7 +26,7 @@ export default async function SubscriptionDetailPage({ params }: { params: Promi
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h1>Edit Subscription</h1>
+        <h1>{subscription.name || 'Unnamed Subscription'}</h1>
         <Link href="/subscriptions">
           <button className="button secondary">Back to List</button>
         </Link>
@@ -33,8 +34,12 @@ export default async function SubscriptionDetailPage({ params }: { params: Promi
 
       <div className="card">
         <h2>Subscription Details</h2>
-        <p><strong>ID:</strong> {subscription.id}</p>
-        <p><strong>Created:</strong> {new Date(subscription.created_at).toLocaleString()}</p>
+        <SubscriptionForm subscription={subscription} />
+        
+        <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid #eee' }}>
+          <p style={{ fontSize: '14px', color: '#6c757d' }}><strong>ID:</strong> {subscription.id}</p>
+          <p style={{ fontSize: '14px', color: '#6c757d' }}><strong>Created:</strong> {new Date(subscription.created_at).toLocaleString()}</p>
+        </div>
 
         <div style={{ marginTop: '1rem' }}>
           <strong>RSS Feed URL:</strong>

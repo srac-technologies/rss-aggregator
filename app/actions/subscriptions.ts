@@ -5,6 +5,8 @@ import { revalidatePath } from 'next/cache'
 
 export interface Subscription {
   id: string
+  name: string | null
+  description: string | null
   created_at: string
   tags?: Tag[]
 }
@@ -71,6 +73,21 @@ export async function createSubscription() {
 
   if (error) throw error
   revalidatePath('/subscriptions')
+  return data
+}
+
+export async function updateSubscription(id: string, updates: { name?: string; description?: string }) {
+  'use server'
+  const { data, error } = await supabaseAdmin
+    .from('subscriptions')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) throw error
+  revalidatePath('/subscriptions')
+  revalidatePath(`/subscriptions/${id}`)
   return data
 }
 
