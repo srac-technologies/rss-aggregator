@@ -1,6 +1,6 @@
 'use server'
 
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-server'
 
 export interface NewsItem {
   id: bigint
@@ -15,7 +15,7 @@ export interface NewsItem {
 }
 
 export async function getNewsBySubscription(subscriptionId: string, limit: number = 10): Promise<NewsItem[]> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('rss_feed')
     .select('*')
     .eq('subscription_id', subscriptionId)
@@ -31,7 +31,7 @@ export async function getNewsBySubscription(subscriptionId: string, limit: numbe
 }
 
 export async function getNewsById(newsId: number): Promise<NewsItem | null> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('news')
     .select('*')
     .eq('id', newsId)
@@ -46,7 +46,7 @@ export async function getNewsById(newsId: number): Promise<NewsItem | null> {
 }
 
 export async function getAllNews(limit: number = 1000, offset: number = 0): Promise<NewsItem[]> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('news')
     .select('*')
     .order('created_at', { ascending: false })
@@ -58,4 +58,51 @@ export async function getAllNews(limit: number = 1000, offset: number = 0): Prom
   }
 
   return data || []
+}
+
+export async function searchNews(query: string, limit: number = 50): Promise<NewsItem[]> {
+  if (!query.trim()) {
+    return []
+  }
+
+  const searchTerm = query.trim()
+  
+  // Search in title first
+  const { data: titleResults, error: titleError } = await supabaseAdmin
+    .from('news')
+    .select('*')
+    .ilike('title', `%${searchTerm}%`)
+    .order('created_at', { ascending: false })
+    .limit(limit)
+
+  if (titleError) {
+    console.error('Error searching news by title:', titleError)
+  }
+
+  // Search in content
+  const { data: contentResults, error: contentError } = await supabaseAdmin
+    .from('news')
+    .select('*')
+    .ilike('content', `%${searchTerm}%`)
+    .order('created_at', { ascending: false })
+    .limit(limit)
+
+  if (contentError) {
+    console.error('Error searching news by content:', contentError)
+  }
+
+  // Merge and dedupe results
+  const allResults = [...(titleResults || []), ...(contentResults || [])]
+  const seen = new Set<number>()
+  const uniqueResults = allResults.filter(item => {
+    const id = Number(item.id)
+    if (seen.has(id)) return false
+    seen.add(id)
+    return true
+  })
+
+  // Sort by created_at descending and limit
+  return uniqueResults
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .slice(0, limit)
 }
