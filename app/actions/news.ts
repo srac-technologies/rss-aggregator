@@ -16,11 +16,10 @@ export interface NewsItem {
 
 export async function getNewsBySubscription(subscriptionId: string, limit: number = 10): Promise<NewsItem[]> {
   const { data, error } = await supabaseAdmin
-    .from('rss_feed')
-    .select('*')
-    .eq('subscription_id', subscriptionId)
-    .order('created_at', { ascending: false })
-    .limit(limit)
+    .rpc('get_rss_feed', {
+      p_subscription_id: subscriptionId,
+      p_limit: limit
+    })
 
   if (error) {
     console.error('Error fetching news by subscription:', error)

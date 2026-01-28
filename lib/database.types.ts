@@ -507,6 +507,20 @@ export type Database = {
         Args: { frequency: string; from_time?: string }
         Returns: string
       }
+      get_rss_feed: {
+        Args: { p_subscription_id: string; p_limit?: number }
+        Returns: {
+          id: number
+          created_at: string
+          guid: string
+          url: string | null
+          content: string | null
+          title: string | null
+          parent: string | null
+          tagged_at: string | null
+          subscription_id: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

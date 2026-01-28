@@ -38,13 +38,12 @@ export async function GET(
   }
 
   try {
-    // Query the rss_feed view directly with subscription_id
+    // Call the get_rss_feed function with subscription_id and limit
     const { data: feedData, error } = await supabase
-      .from('rss_feed')
-      .select('*')
-      .eq('subscription_id', subscriptionId)
-      .order('created_at', { ascending: false })
-      .limit(50)
+      .rpc('get_rss_feed', {
+        p_subscription_id: subscriptionId,
+        p_limit: 50
+      })
 
     if (error) {
       console.error('Supabase query error:', error)
