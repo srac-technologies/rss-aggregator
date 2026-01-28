@@ -65,19 +65,44 @@ export async function searchNews(query: string, limit: number = 50): Promise<New
     return []
   }
 
-  // Try full-text search first using PostgreSQL's to_tsquery
-  // Supabase supports textSearch for full-text search
-  const { data, error } = await supabaseAdmin
+  const searchTerm = query.trim()
+  
+  // Search in title first
+  const { data: titleResults, error: titleError } = await supabaseAdmin
     .from('news')
     .select('*')
-    .or(`title.ilike.%${query}%,content.ilike.%${query}%`)
+    .ilike('title', `%${searchTerm}%`)
     .order('created_at', { ascending: false })
     .limit(limit)
 
-  if (error) {
-    console.error('Error searching news:', error)
-    return []
+  if (titleError) {
+    console.error('Error searching news by title:', titleError)
   }
 
-  return data || []
+  // Search in content
+  const { data: contentResults, error: contentError } = await supabaseAdmin
+    .from('news')
+    .select('*')
+    .ilike('content', `%${searchTerm}%`)
+    .order('created_at', { ascending: false })
+    .limit(limit)
+
+  if (contentError) {
+    console.error('Error searching news by content:', contentError)
+  }
+
+  // Merge and dedupe results
+  const allResults = [...(titleResults || []), ...(contentResults || [])]
+  const seen = new Set<number>()
+  const uniqueResults = allResults.filter(item => {
+    const id = Number(item.id)
+    if (seen.has(id)) return false
+    seen.add(id)
+    return true
+  })
+
+  // Sort by created_at descending and limit
+  return uniqueResults
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .slice(0, limit)
 }
