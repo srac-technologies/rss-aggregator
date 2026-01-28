@@ -25,6 +25,9 @@ export default function RootLayout({
             <li>
               <Link href="/tags">Tags</Link>
             </li>
+            <li>
+              <Link href="/search">Search</Link>
+            </li>
           </ul>
         </nav>
         <div className="container">
