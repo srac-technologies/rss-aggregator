@@ -508,17 +508,17 @@ export type Database = {
         Returns: string
       }
       get_rss_feed: {
-        Args: { p_subscription_id: string; p_limit?: number }
+        Args: { p_limit?: number; p_subscription_id: string }
         Returns: {
-          id: number
+          content: string
           created_at: string
           guid: string
-          url: string | null
-          content: string | null
-          title: string | null
-          parent: string | null
-          tagged_at: string | null
+          id: number
+          parent: string
           subscription_id: string
+          tagged_at: string
+          title: string
+          url: string
         }[]
       }
     }
