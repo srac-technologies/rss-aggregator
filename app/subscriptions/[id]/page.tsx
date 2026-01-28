@@ -4,8 +4,8 @@ import { getNewsBySubscription } from '@/app/actions/news'
 import Link from 'next/link'
 import TagManager from './TagManager'
 import { RemoveTag } from './RemoveTag'
-import NewsCard from '@/components/NewsCard'
 import SubscriptionForm from './SubscriptionForm'
+import NewsList from './NewsList'
 
 export default async function SubscriptionDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -57,17 +57,7 @@ export default async function SubscriptionDetailPage({ params }: { params: Promi
 
       <div style={{ marginBottom: '2rem' }}>
         <h2 style={{ marginBottom: '1.5rem' }}>Recent News Preview</h2>
-        {newsItems.length > 0 ? (
-          <div className="grid">
-            {newsItems.map((news) => (
-              <NewsCard key={news.id} news={news} />
-            ))}
-          </div>
-        ) : (
-          <div className="card">
-            <p style={{ color: '#6c757d' }}>No news items found for this subscription.</p>
-          </div>
-        )}
+        <NewsList subscriptionId={id} initialNews={newsItems} />
       </div>
 
       <div className="card">
