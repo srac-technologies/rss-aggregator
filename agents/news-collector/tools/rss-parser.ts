@@ -11,7 +11,7 @@ export async function parseRSSFeed(url: string): Promise<NewsItem[]> {
       guid: item.guid || item.link || item.title || '',
       title: item.title || 'Untitled',
       url: item.link || '',
-      content: item.contentSnippet || item.content || '',
+      content: item.content || item['content:encoded'] || item.contentSnippet || '',
       publishedAt: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
     }))
   } catch (error) {
