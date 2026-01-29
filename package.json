@@ -12,7 +12,8 @@
     "supabase:stop": "supabase stop",
     "supabase:status": "supabase status",
     "db:migrate": "supabase db reset",
-    "generate:types": "supabase gen types typescript --local > lib/database.types.ts"
+    "generate:types": "supabase gen types typescript --local > lib/database.types.ts",
+    "build:agent": "npx @langchain/langgraph-cli build --config ./langgraph.json -t rss-aggregator-agents:latest"
   },
   "keywords": [],
   "author": "",

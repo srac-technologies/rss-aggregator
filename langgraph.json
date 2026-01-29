@@ -12,8 +12,9 @@
     "resend@^6.9.0"
   ],
   "graphs": {
-    "news-collector": "./agents/news-collector/index.ts",
-    "newsletter": "./agents/newsletter/index.ts"
+    "news-collector": "./agents/news-collector/index.ts:newsCollectorGraph",
+    "newsletter": "./agents/newsletter/index.ts:newsletterGraph",
+    "curation": "./agents/curation/index.ts:curationGraph"
   },
   "env": [
     "ANTHROPIC_API_KEY",
