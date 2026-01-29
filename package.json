@@ -20,6 +20,7 @@
   "license": "ISC",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
+    "@google/generative-ai": "^0.24.1",
     "@langchain/core": "^0.3.0",
     "@langchain/langgraph": "^0.2.0",
     "@react-email/components": "^1.0.6",
