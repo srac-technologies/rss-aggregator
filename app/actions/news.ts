@@ -14,11 +14,12 @@ export interface NewsItem {
   subscription_id?: string
 }
 
-export async function getNewsBySubscription(subscriptionId: string, limit: number = 10): Promise<NewsItem[]> {
+export async function getNewsBySubscription(subscriptionId: string, limit: number = 10, offset: number = 0): Promise<NewsItem[]> {
   const { data, error } = await supabaseAdmin
     .rpc('get_rss_feed', {
       p_subscription_id: subscriptionId,
-      p_limit: limit
+      p_limit: limit,
+      p_offset: offset
     })
 
   if (error) {

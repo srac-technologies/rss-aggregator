@@ -508,7 +508,7 @@ export type Database = {
         Returns: string
       }
       get_rss_feed: {
-        Args: { p_limit?: number; p_subscription_id: string }
+        Args: { p_limit?: number; p_offset?: number; p_subscription_id: string }
         Returns: {
           content: string
           created_at: string
