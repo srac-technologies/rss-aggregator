@@ -1,5 +1,5 @@
-import type { CurationStateType, ArticleEvaluation, SourceArticle } from '../state'
-import { getAnthropicClient } from '@/agents/shared/llm/anthropic'
+import type { CurationStateType, ArticleEvaluation } from '../state'
+import { getLLMClient } from '@/agents/shared/llm'
 import { z } from 'zod'
 
 const EvaluationResultSchema = z.object({
@@ -20,7 +20,7 @@ export async function evaluateArticles(state: CurationStateType): Promise<Partia
   }
 
   try {
-    const anthropic = getAnthropicClient()
+    const llm = getLLMClient(state.agentSettings.llm_provider)
     
     // Prepare article summaries for evaluation
     const articleSummaries = state.sourceArticles.map((article) => ({
@@ -52,7 +52,7 @@ JSON形式で各記事の評価を出力してください：
 }
 `
 
-    const { data, tokensUsed } = await anthropic.generateStructured(
+    const { data, tokensUsed } = await llm.generateStructured(
       evaluationPrompt,
       EvaluationResultSchema,
       state.agentSettings.llm_model,

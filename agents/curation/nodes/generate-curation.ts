@@ -1,5 +1,5 @@
 import type { CurationStateType } from '../state'
-import { getAnthropicClient } from '@/agents/shared/llm/anthropic'
+import { getLLMClient } from '@/agents/shared/llm'
 import { z } from 'zod'
 
 const CurationResultSchema = z.object({
@@ -17,7 +17,7 @@ export async function generateCuration(state: CurationStateType): Promise<Partia
   }
 
   try {
-    const anthropic = getAnthropicClient()
+    const llm = getLLMClient(state.agentSettings.llm_provider)
     
     // Prepare accepted articles for curation
     const articlesForCuration = state.acceptedArticles.map((article) => ({
@@ -62,7 +62,7 @@ JSON形式で以下を出力してください：
 - 元記事のURLがある場合は参照リンクとして含めてください
 `
 
-    const { data, tokensUsed } = await anthropic.generateStructured(
+    const { data, tokensUsed } = await llm.generateStructured(
       curationPrompt,
       CurationResultSchema,
       state.agentSettings.llm_model,

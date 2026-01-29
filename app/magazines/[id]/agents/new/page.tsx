@@ -144,7 +144,8 @@ export default function NewAgentPage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
             <div className="form-group">
               <label htmlFor="llm_provider">LLM Provider</label>
-              <select id="llm_provider" name="llm_provider" defaultValue="anthropic">
+              <select id="llm_provider" name="llm_provider" defaultValue="google">
+                <option value="google">Google (Gemini)</option>
                 <option value="anthropic">Anthropic</option>
                 <option value="openai">OpenAI</option>
               </select>
@@ -156,7 +157,7 @@ export default function NewAgentPage() {
                 type="text"
                 id="llm_model"
                 name="llm_model"
-                defaultValue="claude-3-5-haiku-20241022"
+                defaultValue="gemini-3-pro-preview"
               />
             </div>
 

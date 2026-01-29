@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS curation_agent_settings (
   is_active boolean DEFAULT true,
   
   -- LLM settings
-  llm_provider text DEFAULT 'anthropic',
-  llm_model text DEFAULT 'claude-3-5-haiku-20241022',
+  llm_provider text DEFAULT 'google',
+  llm_model text DEFAULT 'gemini-3-pro-preview',
   
   -- Selection criteria prompt - used to decide accept/reject articles
   selection_prompt text NOT NULL,

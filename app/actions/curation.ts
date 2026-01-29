@@ -165,8 +165,8 @@ export async function createCurationAgentSetting(params: {
     .from('curation_agent_settings')
     .insert({
       ...params,
-      llm_provider: params.llm_provider || 'anthropic',
-      llm_model: params.llm_model || 'claude-3-5-haiku-20241022',
+      llm_provider: params.llm_provider || 'google',
+      llm_model: params.llm_model || 'gemini-3-pro-preview',
       run_frequency: params.run_frequency || 'daily',
     })
     .select()
