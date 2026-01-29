@@ -34,6 +34,284 @@ export type Database = {
   }
   public: {
     Tables: {
+      curated_article_sources: {
+        Row: {
+          created_at: string | null
+          curated_article_id: string
+          id: string
+          news_id: number
+          relevance_score: number | null
+          selection_reason: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          curated_article_id: string
+          id?: string
+          news_id: number
+          relevance_score?: number | null
+          selection_reason?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          curated_article_id?: string
+          id?: string
+          news_id?: number
+          relevance_score?: number | null
+          selection_reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curated_article_sources_curated_article_id_fkey"
+            columns: ["curated_article_id"]
+            isOneToOne: false
+            referencedRelation: "curated_articles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curated_article_sources_news_id_fkey"
+            columns: ["news_id"]
+            isOneToOne: false
+            referencedRelation: "news"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curated_article_sources_news_id_fkey"
+            columns: ["news_id"]
+            isOneToOne: false
+            referencedRelation: "rss_feed"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      curated_articles: {
+        Row: {
+          agent_setting_id: string | null
+          content: string
+          created_at: string | null
+          id: string
+          llm_tokens_used: number | null
+          magazine_id: string
+          processing_duration_ms: number | null
+          published_at: string | null
+          status: string | null
+          summary: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          agent_setting_id?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          llm_tokens_used?: number | null
+          magazine_id: string
+          processing_duration_ms?: number | null
+          published_at?: string | null
+          status?: string | null
+          summary?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          agent_setting_id?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          llm_tokens_used?: number | null
+          magazine_id?: string
+          processing_duration_ms?: number | null
+          published_at?: string | null
+          status?: string | null
+          summary?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curated_articles_agent_setting_id_fkey"
+            columns: ["agent_setting_id"]
+            isOneToOne: false
+            referencedRelation: "curation_agent_settings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curated_articles_magazine_id_fkey"
+            columns: ["magazine_id"]
+            isOneToOne: false
+            referencedRelation: "magazines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      curation_agent_settings: {
+        Row: {
+          created_at: string | null
+          curation_prompt: string
+          id: string
+          is_active: boolean | null
+          last_run_at: string | null
+          llm_model: string | null
+          llm_provider: string | null
+          magazine_id: string
+          name: string
+          next_run_at: string | null
+          run_frequency: string | null
+          selection_prompt: string
+          subscription_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          curation_prompt: string
+          id?: string
+          is_active?: boolean | null
+          last_run_at?: string | null
+          llm_model?: string | null
+          llm_provider?: string | null
+          magazine_id: string
+          name: string
+          next_run_at?: string | null
+          run_frequency?: string | null
+          selection_prompt: string
+          subscription_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          curation_prompt?: string
+          id?: string
+          is_active?: boolean | null
+          last_run_at?: string | null
+          llm_model?: string | null
+          llm_provider?: string | null
+          magazine_id?: string
+          name?: string
+          next_run_at?: string | null
+          run_frequency?: string | null
+          selection_prompt?: string
+          subscription_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curation_agent_settings_magazine_id_fkey"
+            columns: ["magazine_id"]
+            isOneToOne: false
+            referencedRelation: "magazines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curation_agent_settings_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "rss_feed"
+            referencedColumns: ["subscription_id"]
+          },
+          {
+            foreignKeyName: "curation_agent_settings_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      curation_runs: {
+        Row: {
+          agent_setting_id: string
+          articles_accepted: number | null
+          articles_evaluated: number | null
+          articles_rejected: number | null
+          completed_at: string | null
+          created_at: string | null
+          curated_article_id: string | null
+          error_message: string | null
+          error_stack: string | null
+          id: string
+          llm_tokens_used: number | null
+          started_at: string | null
+          status: string | null
+        }
+        Insert: {
+          agent_setting_id: string
+          articles_accepted?: number | null
+          articles_evaluated?: number | null
+          articles_rejected?: number | null
+          completed_at?: string | null
+          created_at?: string | null
+          curated_article_id?: string | null
+          error_message?: string | null
+          error_stack?: string | null
+          id?: string
+          llm_tokens_used?: number | null
+          started_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          agent_setting_id?: string
+          articles_accepted?: number | null
+          articles_evaluated?: number | null
+          articles_rejected?: number | null
+          completed_at?: string | null
+          created_at?: string | null
+          curated_article_id?: string | null
+          error_message?: string | null
+          error_stack?: string | null
+          id?: string
+          llm_tokens_used?: number | null
+          started_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curation_runs_agent_setting_id_fkey"
+            columns: ["agent_setting_id"]
+            isOneToOne: false
+            referencedRelation: "curation_agent_settings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curation_runs_curated_article_id_fkey"
+            columns: ["curated_article_id"]
+            isOneToOne: false
+            referencedRelation: "curated_articles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      magazines: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          is_published: boolean | null
+          name: string
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_published?: boolean | null
+          name: string
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_published?: boolean | null
+          name?: string
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       news: {
         Row: {
           auto_tagged: boolean | null
@@ -506,6 +784,38 @@ export type Database = {
       calculate_next_collection_time: {
         Args: { frequency: string; from_time?: string }
         Returns: string
+      }
+      get_curated_article_with_sources: {
+        Args: { p_curated_article_id: string }
+        Returns: {
+          content: string
+          created_at: string
+          id: string
+          magazine_id: string
+          published_at: string
+          source_news_ids: number[]
+          source_news_titles: string[]
+          status: string
+          summary: string
+          title: string
+        }[]
+      }
+      get_magazine_articles: {
+        Args: {
+          p_limit?: number
+          p_magazine_id: string
+          p_offset?: number
+          p_status?: string
+        }
+        Returns: {
+          created_at: string
+          id: string
+          published_at: string
+          source_count: number
+          status: string
+          summary: string
+          title: string
+        }[]
       }
       get_rss_feed: {
         Args: { p_limit?: number; p_offset?: number; p_subscription_id: string }

@@ -28,6 +28,9 @@ export default function RootLayout({
             <li>
               <Link href="/search">Search</Link>
             </li>
+            <li>
+              <Link href="/magazines">Magazines</Link>
+            </li>
           </ul>
         </nav>
         <div className="container">
