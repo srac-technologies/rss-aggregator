@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-server'
-import { runNewsCollector } from '@/agents/news-collector'
+import { getLangGraphClient } from '@/lib/langgraph-client'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -41,10 +41,25 @@ export async function GET(request: NextRequest) {
 
     const results = []
 
+    const client = getLangGraphClient()
+
     // Process each source
     for (const source of sources) {
       try {
-        const result = await runNewsCollector(source.id)
+        const runResult = await client.invoke('news-collector', { sourceId: source.id })
+        
+        if (runResult.error) {
+          throw new Error(runResult.error)
+        }
+        
+        const result = runResult.result as {
+          itemsFetched: number
+          itemsNew: number
+          itemsSkipped: number
+          tokensUsed: number
+          errors: string[]
+        }
+        
         results.push({
           sourceId: source.id,
           sourceName: source.name,

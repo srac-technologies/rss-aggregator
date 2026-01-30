@@ -2,7 +2,7 @@
 
 import { supabaseAdmin } from '@/lib/supabase-server'
 import { revalidatePath } from 'next/cache'
-import { runCurationAgent } from '@/agents/curation'
+import { getLangGraphClient } from '@/lib/langgraph-client'
 
 // Types
 export interface Magazine {
@@ -202,9 +202,23 @@ export async function deleteCurationAgentSetting(id: string) {
 
 export async function triggerCurationAgent(agentSettingId: string) {
   try {
-    const result = await runCurationAgent(agentSettingId)
+    const client = getLangGraphClient()
+    const result = await client.invoke('curation', { agentSettingId })
+    
     revalidatePath('/magazines')
-    return result
+    
+    if (result.error) {
+      throw new Error(result.error)
+    }
+    
+    return result.result as {
+      curatedArticleId: string | null
+      articlesEvaluated: number
+      articlesAccepted: number
+      articlesRejected: number
+      tokensUsed: number
+      errors: string[]
+    }
   } catch (error) {
     console.error('Failed to run curation agent:', error)
     throw error
