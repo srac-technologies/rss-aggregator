@@ -29,7 +29,7 @@ export async function fetchSource(state: NewsCollectorStateType): Promise<Partia
         tavily_search_depth: source.tavily_search_depth as 'basic' | 'advanced' | null,
         tavily_days: source.tavily_days,
         auto_tag_enabled: source.auto_tag_enabled || false,
-        llm_provider: source.llm_provider as 'anthropic' | 'openai' | null,
+        llm_provider: source.llm_provider as 'google' | 'anthropic' | 'openai' | null,
         llm_model: source.llm_model,
       },
     }

@@ -1,6 +1,5 @@
 import type { NewsletterStateType } from '../state'
-import { getAnthropicClient } from '@/agents/shared/llm/anthropic'
-import { getOpenAIClient } from '@/agents/shared/llm/openai'
+import { getLLMClient } from '@/agents/shared/llm'
 
 export async function generateSummary(state: NewsletterStateType): Promise<Partial<NewsletterStateType>> {
   try {
@@ -42,25 +41,12 @@ ${newsContentForSummary}
 
 Generate the newsletter content.`
 
-    let summaryResult: { text: string; tokensUsed: number }
-
-    if (state.settings.llm_provider === 'anthropic') {
-      const client = getAnthropicClient()
-      summaryResult = await client.generateText(
-        summaryUserPrompt,
-        state.settings.llm_model,
-        summarySystemPrompt,
-        8192
-      )
-    } else {
-      const client = getOpenAIClient()
-      summaryResult = await client.generateText(
-        summaryUserPrompt,
-        state.settings.llm_model,
-        summarySystemPrompt,
-        8192
-      )
-    }
+    const client = getLLMClient(state.settings.llm_provider)
+    const summaryResult = await client.generateText(
+      summaryUserPrompt,
+      state.settings.llm_model,
+      summarySystemPrompt
+    )
 
     return {
       summaryHtml: summaryResult.text,

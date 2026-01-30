@@ -14,7 +14,7 @@ export interface ProcessedItem {
   tokensUsed: number
 }
 
-export type LLMProvider = 'anthropic' | 'openai'
+export type LLMProvider = 'google' | 'anthropic' | 'openai'
 export type SourceType = 'rss' | 'tavily_search'
 export type NewsletterFrequency = 'hourly' | 'daily' | 'weekly'
 export type NewsletterStatus = 'pending' | 'processing' | 'sent' | 'failed'

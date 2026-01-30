@@ -1,6 +1,5 @@
 import { z } from 'zod'
-import { getAnthropicClient } from '@/agents/shared/llm/anthropic'
-import { getOpenAIClient } from '@/agents/shared/llm/openai'
+import { getLLMClient, DEFAULT_LLM_MODEL } from '@/agents/shared/llm'
 import { getSupabaseClient } from '@/agents/shared/database'
 import type { LLMProvider } from '@/agents/shared/types'
 
@@ -19,7 +18,7 @@ export async function autoTagNews(
   newsId: number,
   title: string,
   content: string,
-  provider: LLMProvider = 'anthropic',
+  provider: LLMProvider = 'google',
   model?: string
 ): Promise<AutoTagResult> {
   try {
@@ -59,25 +58,13 @@ Content: ${content.substring(0, 1000)}${content.length > 1000 ? '...' : ''}
 
 Select the most relevant tag IDs for this article.`
 
-    let result: { data: z.infer<typeof TagSelectionSchema>; tokensUsed: number }
-
-    if (provider === 'anthropic') {
-      const client = getAnthropicClient()
-      result = await client.generateStructured(
-        userPrompt,
-        TagSelectionSchema,
-        model || 'claude-3-5-haiku-20241022',
-        systemPrompt
-      )
-    } else {
-      const client = getOpenAIClient()
-      result = await client.generateStructured(
-        userPrompt,
-        TagSelectionSchema,
-        model || 'gpt-4-turbo-preview',
-        systemPrompt
-      )
-    }
+    const client = getLLMClient(provider)
+    const result = await client.generateStructured(
+      userPrompt,
+      TagSelectionSchema,
+      model || DEFAULT_LLM_MODEL,
+      systemPrompt
+    )
 
     // Validate that all tag IDs exist
     const validTagIds = tags.map((t) => t.id)

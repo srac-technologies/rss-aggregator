@@ -1,7 +1,6 @@
 import type { NewsletterStateType } from '../state'
 import { z } from 'zod'
-import { getAnthropicClient } from '@/agents/shared/llm/anthropic'
-import { getOpenAIClient } from '@/agents/shared/llm/openai'
+import { getLLMClient } from '@/agents/shared/llm'
 
 const FilterResultSchema = z.object({
   accepted_news_ids: z.array(z.number()).describe('Array of news IDs to include in newsletter'),
@@ -45,25 +44,13 @@ ${newsListForPrompt}
 
 Select the news IDs that match the filter criteria.`
 
-    let filterResult: { data: z.infer<typeof FilterResultSchema>; tokensUsed: number }
-
-    if (state.settings.llm_provider === 'anthropic') {
-      const client = getAnthropicClient()
-      filterResult = await client.generateStructured(
-        filterUserPrompt,
-        FilterResultSchema,
-        state.settings.llm_model,
-        filterSystemPrompt
-      )
-    } else {
-      const client = getOpenAIClient()
-      filterResult = await client.generateStructured(
-        filterUserPrompt,
-        FilterResultSchema,
-        state.settings.llm_model,
-        filterSystemPrompt
-      )
-    }
+    const client = getLLMClient(state.settings.llm_provider)
+    const filterResult = await client.generateStructured(
+      filterUserPrompt,
+      FilterResultSchema,
+      state.settings.llm_model,
+      filterSystemPrompt
+    )
 
     return {
       acceptedNewsIds: filterResult.data.accepted_news_ids,
