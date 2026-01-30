@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-server'
-import { runNewsletter } from '@/agents/newsletter'
+import { getLangGraphClient } from '@/lib/langgraph-client'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -75,10 +75,25 @@ export async function GET(request: NextRequest) {
 
     const results = []
 
+    const client = getLangGraphClient()
+
     // Process each newsletter
     for (const settings of newslettersToSend) {
       try {
-        const result = await runNewsletter(settings.subscription_id)
+        const runResult = await client.invoke('newsletter', { subscriptionId: settings.subscription_id })
+        
+        if (runResult.error) {
+          throw new Error(runResult.error)
+        }
+        
+        const result = runResult.result as {
+          status: string
+          newsletterId: number | null
+          newsCount: number
+          tokensUsed: number
+          error: string | null
+        }
+        
         results.push({
           subscriptionId: settings.subscription_id,
           recipientEmail: settings.recipient_email,
