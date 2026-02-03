@@ -2,7 +2,7 @@
 
 import { supabaseAdmin } from '@/lib/supabase-server'
 import { revalidatePath } from 'next/cache'
-import { runNewsCollector } from '@/agents/news-collector'
+import { getLangGraphClient } from '@/lib/langgraph-client'
 
 export interface NewsSource {
   id: number
@@ -151,11 +151,24 @@ export async function getCollectionRun(id: number) {
 
 export async function triggerCollection(sourceId: number) {
   try {
-    const result = await runNewsCollector(sourceId)
+    const client = getLangGraphClient()
+    const result = await client.invoke('news-collector', { sourceId })
+    
     revalidatePath(`/admin/sources/${sourceId}`)
+    
+    if (result.error) {
+      throw new Error(result.error)
+    }
+    
     return {
       success: true,
-      ...result,
+      ...(result.result as {
+        itemsFetched: number
+        itemsNew: number
+        itemsSkipped: number
+        tokensUsed: number
+        errors: string[]
+      }),
     }
   } catch (error) {
     console.error('Failed to trigger collection:', error)
